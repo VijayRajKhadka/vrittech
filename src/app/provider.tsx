@@ -1,5 +1,4 @@
 "use client";
-import { Suspense } from "react";
 import { store } from "@/lib/store";
 import { Provider } from "react-redux";
 
