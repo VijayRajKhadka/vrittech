@@ -27,7 +27,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const quantity = cartItem?.count || 0;
 
-  const increase = () => {
+  const increase = () => {  
     if (cartItem) {
       dispatch(updateQuantity({ id: product.id, count: quantity + 1 }));
       toast.success("Quantity Updated");

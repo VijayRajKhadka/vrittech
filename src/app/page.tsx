@@ -43,7 +43,7 @@ export default function Home() {
           </Link>
 
           <Link
-            href="/register"
+            href="/figma-design"
             prefetch
             className="group flex items-center justify-between p-4 rounded-lg bg-white border border-slate-200 hover:border-indigo-500 hover:shadow-md transition-all duration-200"
           >
