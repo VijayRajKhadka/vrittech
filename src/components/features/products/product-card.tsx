@@ -1,7 +1,7 @@
 "use client";
 
 import { Product } from "@/src/types/product";
-import { ShoppingCart, ShoppingCartIcon, Star } from "lucide-react";
+import { ShoppingCartIcon, Star } from "lucide-react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart, updateQuantity } from "../cart/cartSlice";
@@ -27,7 +27,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const quantity = cartItem?.count || 0;
 
-  const increase = () => {  
+  const increase = () => {
     if (cartItem) {
       dispatch(updateQuantity({ id: product.id, count: quantity + 1 }));
       toast.success("Quantity Updated");
@@ -41,11 +41,14 @@ export function ProductCard({ product }: ProductCardProps) {
           count: 1,
         })
       );
+      toast.success("Added to cart 🎉");
     }
   };
 
   const decrease = () => {
-    if (quantity <= 1) {
+    if (quantity === 0) return;
+
+    if (quantity === 1) {
       dispatch(removeFromCart(product.id));
       toast.success("Item Removed from cart");
     } else {
@@ -55,9 +58,7 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   const handleCartClick = () => {
-    if (cartItem) {
-      toast.warning("Already in cart 🛒");
-    } else {
+    if (quantity === 0) {
       dispatch(
         addToCart({
           id: product.id,
@@ -67,14 +68,16 @@ export function ProductCard({ product }: ProductCardProps) {
           count: 1,
         })
       );
-
       toast.success("Added to cart 🎉");
+    } else {
+      toast.warning("Already in cart 🛒");
     }
   };
+
   if (!mounted) return null;
 
   return (
-    <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-lg transition flex flex-col">
+    <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-lg transition flex flex-col h-full">
       <div className="h-48 w-full flex items-center justify-center">
         <Image
           src={product.image}
@@ -101,14 +104,14 @@ export function ProductCard({ product }: ProductCardProps) {
             <span className="text-gray-400">({product.rating.count})</span>
           </div>
 
-          <p className="my-1 font-bold text-lg">${product.price}</p>
+          <p className="my-1 font-bold text-lg">${product.price.toFixed(2)}</p>
 
           <div className="flex items-center justify-between mt-3">
             <div className="flex items-center bg-gray-100 rounded-full px-2 py-1 gap-4">
               <button
                 onClick={decrease}
                 disabled={quantity === 0}
-                className="text-lg text-gray-500 hover:text-black transition-colors hover:transform hover:scale-120  cursor-pointer font-semibold w-6 h-6 flex items-center justify-center"
+                className="text-lg text-gray-500 hover:text-black transition-colors disabled:opacity-30 cursor-pointer font-semibold w-6 h-6 flex items-center justify-center"
               >
                 -
               </button>
@@ -119,7 +122,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
               <button
                 onClick={increase}
-                className="text-lg text-gray-500 hover:text-black transition-colors hover:transform hover:scale-120  cursor-pointer font-semibold w-6 h-6 flex items-center justify-center"
+                className="text-lg text-gray-500 hover:text-black transition-colors cursor-pointer font-semibold w-6 h-6 flex items-center justify-center"
               >
                 +
               </button>
@@ -127,8 +130,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
             <button
               onClick={handleCartClick}
-              disabled={quantity === 0}
-              className="ml-auto w-8 h-8 disabled:bg-gray-400 rounded-full bg-gray-800 hover:bg-black text-white flex items-center justify-center transition cursor-pointer"
+              className="ml-auto w-8 h-8 rounded-full bg-gray-800 hover:bg-black text-white flex items-center justify-center transition cursor-pointer"
             >
               <ShoppingCartIcon size={18} />
             </button>
